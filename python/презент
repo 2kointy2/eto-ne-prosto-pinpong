@@ -1,0 +1,104 @@
+import time
+from random import choice, shuffle
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+       QApplication, QWidget,
+       QTableWidget, QListWidget, QListWidgetItem,
+       QLineEdit, QFormLayout,
+       QHBoxLayout, QVBoxLayout,
+       QGroupBox, QButtonGroup, QRadioButton,
+       QPushButton, QLabel, QSpinBox)
+
+from memo_question import Question
+
+app = QApplication([])
+window = QWidget()
+
+btn_menu = QPushButton('Меню')
+btn_rest = QPushButton('відпочити')
+btn_ok = QPushButton('Відповісти')
+
+lb_rest = QLabel('хвилини')
+lb_question = QLabel('Яблуко')
+lb_result = QLabel('Вірно')
+lb_right_ans = QLabel('apple')
+
+rb_ans1 = QRadioButton('building')
+rb_ans2 = QRadioButton('aplication')
+rb_ans3 = QRadioButton('apple')
+rb_ans4 = QRadioButton('tree')
+
+sb_rest = QSpinBox()
+bg_radio_buttons = QButtonGroup()
+
+bg_radio_buttons.addButton(rb_ans1)
+bg_radio_buttons.addButton(rb_ans2)
+bg_radio_buttons.addButton(rb_ans3)
+bg_radio_buttons.addButton(rb_ans4)
+
+gb_question = QGroupBox('Варіанти відповідей')
+gb_answer = QGroupBox('Результат')
+
+vl_rb1 = QVBoxLayout()
+vl_rb2 = QVBoxLayout()
+hl_rb = QHBoxLayout()
+
+vl_rb1.addWidget(rb_ans1)
+vl_rb1.addWidget(rb_ans2)
+vl_rb2.addWidget(rb_ans3)
+vl_rb2.addWidget(rb_ans4)
+
+hl_rb.addLayout(vl_rb1)
+hl_rb.addLayout(vl_rb2)
+
+gb_question.setLayout(hl_rb)
+
+vl_res = QVBoxLayout()
+vl_res.addWidget(lb_result, alignment=(Qt.AlignLeft | Qt.AlignTop))
+vl_res.addWidget(lb_right_ans, alignment=Qt.AlignHCenter, stretch=2)
+gb_answer.setLayout(vl_res)
+gb_answer.hide()
+
+hl_win1 = QHBoxLayout()
+hl_win2 = QHBoxLayout()
+hl_win3 = QHBoxLayout()
+hl_win4 = QHBoxLayout()
+
+hl_win1.addWidget(btn_menu)
+hl_win1.addStretch(1)
+hl_win1.addWidget(btn_rest)
+hl_win1.addWidget(sb_rest)
+hl_win1.addWidget(lb_rest)
+
+hl_win2.addWidget(lb_question, alignment=(Qt.AlignHCenter | Qt.AlignVCenter))
+
+hl_win3.addWidget(gb_question)
+hl_win3.addWidget(gb_answer)
+
+hl_win4.addStretch(1)
+hl_win4.addWidget(btn_ok, stretch=2)
+hl_win4.addStretch(1)
+
+vl_window = QVBoxLayout()
+vl_window.addLayout(hl_win1, stretch=1)
+vl_window.addLayout(hl_win2, stretch=2)
+vl_window.addLayout(hl_win3, stretch=8)
+vl_window.addStretch(1)
+vl_window.addLayout(hl_win4, stretch=1)
+vl_window.addStretch(1)
+
+window.setLayout(vl_window)
+window.resize(600, 500)
+window.setWindowTitle('Memory Card')
+window.move(300, 300)
+
+def click_rest():
+       window.hide()
+       time.sleep(sb_rest.value()*60)
+       window.show()
+
+btn_rest.clicked.connect(click_rest)
+
+window.show()
+app.exec_()

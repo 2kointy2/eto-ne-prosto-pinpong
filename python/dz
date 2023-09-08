@@ -1,0 +1,184 @@
+import time
+from random import choice, shuffle
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+       QApplication, QWidget,
+       QTableWidget, QListWidget, QListWidgetItem,
+       QLineEdit, QFormLayout,
+       QHBoxLayout, QVBoxLayout,
+       QGroupBox, QButtonGroup, QRadioButton,
+       QPushButton, QLabel, QSpinBox, QMessageBox)
+
+
+app = QApplication([])
+window = QWidget()
+
+btn_menu = QPushButton('Меню')
+btn_rest = QPushButton('відпочити')
+btn_ok = QPushButton('Відповісти')
+
+lb_rest = QLabel('хвилини')
+lb_question = QLabel('Яблуко')
+lb_result = QLabel('Вірно')
+lb_right_ans = QLabel('apple')
+
+rb_ans1 = QRadioButton('building')
+rb_ans2 = QRadioButton('aplication')
+rb_ans3 = QRadioButton('apple')
+rb_ans4 = QRadioButton('tree')
+
+sb_rest = QSpinBox()
+bg_radio_buttons = QButtonGroup()
+
+bg_radio_buttons.addButton(rb_ans1)
+bg_radio_buttons.addButton(rb_ans2)
+bg_radio_buttons.addButton(rb_ans3)
+bg_radio_buttons.addButton(rb_ans4)
+
+gb_question = QGroupBox('Варіанти відповідей')
+gb_answer = QGroupBox('Результат')
+
+vl_rb1 = QVBoxLayout()
+vl_rb2 = QVBoxLayout()
+hl_rb = QHBoxLayout()
+
+vl_rb1.addWidget(rb_ans1)
+vl_rb1.addWidget(rb_ans2)
+vl_rb2.addWidget(rb_ans3)
+vl_rb2.addWidget(rb_ans4)
+
+hl_rb.addLayout(vl_rb1)
+hl_rb.addLayout(vl_rb2)
+
+gb_question.setLayout(hl_rb)
+
+vl_res = QVBoxLayout()
+vl_res.addWidget(lb_result, alignment=(Qt.AlignLeft | Qt.AlignTop))
+vl_res.addWidget(lb_right_ans, alignment=Qt.AlignHCenter, stretch=2)
+gb_answer.setLayout(vl_res)
+gb_answer.hide()
+
+hl_win1 = QHBoxLayout()
+hl_win2 = QHBoxLayout()
+hl_win3 = QHBoxLayout()
+hl_win4 = QHBoxLayout()
+
+hl_win1.addWidget(btn_menu)
+hl_win1.addStretch(1)
+hl_win1.addWidget(btn_rest)
+hl_win1.addWidget(sb_rest)
+hl_win1.addWidget(lb_rest)
+
+hl_win2.addWidget(lb_question, alignment=(Qt.AlignHCenter | Qt.AlignVCenter))
+
+hl_win3.addWidget(gb_question)
+hl_win3.addWidget(gb_answer)
+
+hl_win4.addStretch(1)
+hl_win4.addWidget(btn_ok, stretch=2)
+hl_win4.addStretch(1)
+
+vl_window = QVBoxLayout()
+vl_window.addLayout(hl_win1, stretch=1)
+vl_window.addLayout(hl_win2, stretch=2)
+vl_window.addLayout(hl_win3, stretch=8)
+vl_window.addStretch(1)
+vl_window.addLayout(hl_win4, stretch=1)
+vl_window.addStretch(1)
+
+window.setLayout(vl_window)
+window.resize(600, 500)
+window.setWindowTitle('Memory Card')
+window.move(300, 300)
+
+def click_rest():
+       window.hide()
+       time.sleep(sb_rest.value()*60)
+       window.show()
+
+btn_rest.clicked.connect(click_rest)
+
+class Question():
+    # клас, який представляє собою питання. Заповніть пропуски, щоб init працював коректно
+    def __init__(self, question, answer, wrong_answer1='', wrong_answer2='', wrong_answer3=''):
+        # створіть властивості для всіх аргументів
+        self.question = question # питання
+        self.answer = answer # правильна відповідь
+        self.wrong_answer1 = wrong_answer1 # невірна відповідь №1
+        self.wrong_answer2 = wrong_answer2 # невірна відповідь №2
+        self.wrong_answer3 = wrong_answer3 # невірна відповідь №3
+        self.is_valid = True # чи продовжувати задавати це питання. Булева змінна. За замовчуванням - True
+        self.tries = 0 # скільки задавали це питання
+        self.right = 0 # скільки правильно відповідали на це питання
+    def got_right(self):
+        # метод, який реалізує правильну відповідь. Додає одиничку до кількості спроб та к-сті правильних відповідей
+        self.tries += 1
+        self.right += 1
+    def got_wrong(self):
+        # метод, який реалізує неправильну відповідь. Додає одиничку до к-сті спроб
+        self.tries += 1
+
+q1 = Question('Яблуко', 'apple', 'application', 'pinapple', 'apply')
+q2 = Question('Дім', 'house', 'horse', 'hurry', 'hour')
+q3 = Question('Миша', 'mouse', 'mouth', 'muse', 'museum')
+q4 = Question('Число', 'number', 'digit', 'amount', 'summary')
+questions = [q1, q2, q3, q4]
+radio_list = [rb_ans1, rb_ans2, rb_ans3, rb_ans4]
+cur_q = q1
+
+def new_q():
+     global cur_q
+     cur_q = choice(questions)
+     shuffle(radio_list)
+     radio_list[0].setText(cur_q.answer)
+     radio_list[1].setText(cur_q.wrong_answer1)
+     radio_list[2].setText(cur_q.wrong_answer2)
+     radio_list[3].setText(cur_q.wrong_answer3)
+     lb_question.setText(cur_q.question)
+     lb_right_ans.setText(cur_q.answer)
+
+
+def check():
+     for i in radio_list:
+          if i.isChecked():
+               if i.text() == cur_q.answer:
+                lb_rest.setText('Вірно!')
+                break
+     else:
+         cur_q.got_right()
+         lb_rest.setText('Не вірно!')
+
+     lb_right_ans.setText(cur_q.answer)
+                   
+
+
+
+
+def click():
+     if btn_ok.text() == 'Відповісти':
+          check()
+          gb_question.hide()
+          gb_answer.show()
+          btn_ok.setText('Наступне запитання')
+     else:
+        new_q()
+        gb_question.show
+        gb_answer.hide
+        btn_ok.setText('Відповісти')
+
+
+btn_ok.clicked.connect(click)
+
+def menu_info():
+    info = QMessageBox()
+    if cur_q.tries == 0:
+        info.setText(f'Кількість спроб: 0\nКількість правильних відповідей: 0\nВідсоток: 0')
+    else:
+        info.setText(f'Кількість спроб: {cur_q.tries}\nКількість правильних відповідей: {cur_q.right}\nВідсоток: {(cur_q.right/cur_q.tries)*100}')
+    info.exec()
+
+btn_menu.clicked.connect(menu_info)
+
+window.show()
+app.exec_()

@@ -1,0 +1,47 @@
+from pygame import *
+
+
+window = display.set_mode((500, 500))
+bg = image.load('background.png')
+bg = transform.scale(bg, (500, 500))
+window.blit(bg, (0, 0))
+clock = time.Clock()
+
+
+class GameSprite(sprite.Sprite):
+    def __init__(self, filename, x, y, speed):
+        super().__init__()
+        self.image = transform.scale(image.load(filename), (65, 65))
+        self.speed = speed
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+
+player = GameSprite('sprite1.png', 100, 100, 4)
+
+game = True
+while game:
+    window.blit(bg, (0, 0))
+    player.reset()
+    pressed = key.get_pressed()
+    if pressed[K_d]:
+        player.rect.x += player.speed
+    elif pressed[K_a]:
+        player.rect.x -= player.speed
+
+    if pressed[K_s]:
+        player.rect.y += player.speed
+    elif pressed[K_d]:
+        player.rect.y -= player.speed
+
+    for e in event.get():
+        if e.type == QUIT:
+            quit()
+
+    display.update()
+    clock.tick(40)
+    

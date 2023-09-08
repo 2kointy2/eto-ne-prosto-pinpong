@@ -1,0 +1,40 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout
+
+app = QApplication([]) 
+window = QWidget()
+
+lbl_number = QLabel('0')
+btn_plus = QPushButton('+')
+btn_minus = QPushButton('-')
+
+
+vl_1 = QVBoxLayout()
+hl_1 = QHBoxLayout()
+hl_1.addWidget(btn_plus)
+hl_1.addWidget(btn_minus)
+
+print(Qt.AlignCenter)
+vl_1.addWidget(lbl_number, alignment=Qt.AlignCenter)
+vl_1.addLayout(hl_1)
+
+window.setLayout(vl_1)
+
+counter = 0
+
+def plus():
+    global counter
+    counter += 1
+    lbl_number.setText(str(counter))
+btn_plus.clicked.connect(plus)
+
+def minus():
+    global counter
+    counter -= 1
+    lbl_number.setText(str(counter))
+
+btn_minus.clicked.connect(minus)
+
+
+window.show()
+app.exec_()

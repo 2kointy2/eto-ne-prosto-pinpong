@@ -1,0 +1,41 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (
+       QApplication, QWidget,
+       QTableWidget, QListWidget, QListWidgetItem,
+       QLineEdit, QFormLayout,
+       QHBoxLayout, QVBoxLayout,
+       QGroupBox, QButtonGroup, QRadioButton,
+       QPushButton, QLabel, QSpinBox)
+
+
+app = QApplication([])
+window = QWidget()
+
+btn_menu = QPushButton('Меню')
+btn_rest = QPushButton('відпочити')
+btn_ok = QPushButton('Відповісти')
+
+lb_rest = QLabel('хвилини')
+lb_question = QLabel('Яблуко')
+lb_result = QLabel('Вірно')
+lb_right_ans = QLabel('apple')
+
+rb_ans1 = QRadioButton('building')
+rb_ans2 = QRadioButton('aplication')
+rb_ans3 = QRadioButton('apple')
+rb_ans4 = QRadioButton('tree')
+
+sb_rest = QSpinBox()
+bg_radio_buttons = QButtonGroup()
+
+bg_radio_buttons.addButton(rb_ans1)
+bg_radio_buttons.addButton(rb_ans2)
+bg_radio_buttons.addButton(rb_ans3)
+bg_radio_buttons.addButton(rb_ans4)
+
+gb_question = QGroupBox('Варіанти відповідей')
+gb_answer = QGroupBox('Результат')
+
+
+window.show()
+app.exec_()

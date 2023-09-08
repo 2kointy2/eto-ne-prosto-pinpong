@@ -1,0 +1,50 @@
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QRadioButton, QVBoxLayout, QHBoxLayout, QMessageBox
+app = QApplication([])
+window = QWidget()
+window.resize(150, 150)
+
+lbl_question = QLabel('question')
+rb_ans1 = QRadioButton('1')
+rb_ans2 = QRadioButton('2')
+rb_ans3 = QRadioButton('3')
+rb_ans4 = QRadioButton('4')
+
+vl_ans1 = QVBoxLayout()
+vl_ans2 = QVBoxLayout()
+
+vl_ans1.addWidget(rb_ans1)
+vl_ans1.addWidget(rb_ans2)
+
+vl_ans2.addWidget(rb_ans3)
+vl_ans2.addWidget(rb_ans4)
+
+hl_ans = QHBoxLayout()
+hl_ans.addLayout(vl_ans1)
+hl_ans.addLayout(vl_ans2)
+
+vl_main = QVBoxLayout()
+vl_main.addWidget(lbl_question)
+vl_main.addLayout(hl_ans)
+
+window.setLayout(vl_main)
+
+def win():
+    msg = QMessageBox()
+    msg.setText('Right!')
+    msg.exec_()
+
+rb_ans2.clicked.connect(win)
+
+def lose():
+    msg = QMessageBox()
+    msg.setText('Wrong!')
+    msg.exec_()
+    app.quit()
+
+rb_ans1.clicked.connect(lose)
+rb_ans3.clicked.connect(lose)
+rb_ans4.clicked.connect(lose)
+
+
+window.show()
+app.exec_()
